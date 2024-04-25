@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id             Int              @id @default(autoincrement())
+  razao_social   String
+  nome_fantasia  String?
+  cnpj           String
+  Company_Sector Company_Sector[]
+}
+
+model Sector {
+  id             Int              @id @default(autoincrement())
+  descricao      String
+  Company_Sector Company_Sector[]
+}
+
+model Company_Sector {
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId Int
+  sector    Sector  @relation(fields: [sectorId], references: [id])
+  sectorId  Int
+
+  @@id([sectorId, companyId])
+}
